@@ -2,6 +2,11 @@ import os
 import json
 import time
 import requests
+from dotenv import load_dotenv
+
+# Load .env file explicitly
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
+print("DEBUG: GROK_SUBSCRIPTION_API_KEY =", os.getenv("GROK_SUBSCRIPTION_API_KEY"))
 
 class PrometheusAgent:
     def __init__(self):
@@ -47,11 +52,19 @@ class PrometheusAgent:
             "status": "Pending",
             "timestamp": time.time()
         }
+        # Determine asset type from task
+        asset_type = None
+        for keyword in ["avatar", "temple", "oasis", "cinematic", "stability", "puzzle"]:
+            if keyword in task.lower():
+                asset_type = keyword
+                break
+        if not asset_type:
+            asset_type = "unknown"
         # Use Grok API for task prioritization
         grok_response = self.grok_api_call(f"Prioritize task: {task} for {agent_name} in Source of Creation")
         if not isinstance(grok_response, dict):
             task_data["status"] = "In Progress"
-            task_data["output"] = f"assets/3d/{agent_name}_{task.split('_')[1]}_lod0.fbx"
+            task_data["output"] = f"assets/3d/{agent_name}_{asset_type}_lod0.fbx"
             task_data["grok_priority"] = grok_response
         else:
             task_data["status"] = "Error"
