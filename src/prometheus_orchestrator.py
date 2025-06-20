@@ -25,7 +25,7 @@ class PrometheusAgent:
             return {"error": "Grok API key missing"}
         headers = {"Authorization": f"Bearer {self.api_keys['grok']}"}
         payload = {
-            "model": "grok-beta",
+            "model": "grok-3-latest",
             "messages": [{"role": "user", "content": prompt}],
             "max_tokens": 100
         }
