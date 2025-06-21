@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 # Load .env file explicitly
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
 print("DEBUG: GROK_SUBSCRIPTION_API_KEY =", os.getenv("GROK_SUBSCRIPTION_API_KEY"))
+print("DEBUG: OPENAI_API_KEY =", os.getenv("OPENAI_API_KEY"))
 
 class PrometheusAgent:
     def __init__(self):
@@ -27,6 +28,7 @@ class PrometheusAgent:
 
     def grok_api_call(self, prompt):
         if not self.api_keys["grok"]:
+            print("DEBUG: Grok API key missing")
             return {"error": "Grok API key missing"}
         headers = {"Authorization": f"Bearer {self.api_keys['grok']}"}
         payload = {
@@ -39,6 +41,35 @@ class PrometheusAgent:
             response.raise_for_status()
             return response.json()["choices"][0]["message"]["content"]
         except Exception as e:
+            print(f"DEBUG: Grok API error: {str(e)}")
+            return {"error": str(e)}
+
+    def openai_api_call(self, prompt):
+        if not self.api_keys["openai"]:
+            print("DEBUG: OpenAI API key missing")
+            return {"error": "OpenAI API key missing"}
+        headers = {
+            "Authorization": f"Bearer {self.api_keys['openai']}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "model": "gpt-3.5-turbo",
+            "messages": [{"role": "user", "content": prompt}],
+            "max_tokens": 150
+        }
+        try:
+            response = requests.post("https://api.openai.com/v1/chat/completions", json=payload, headers=headers)
+            response.raise_for_status()
+            return response.json()["choices"][0]["message"]["content"]
+        except requests.exceptions.HTTPError as e:
+            error_response = response.json().get("error", {})
+            if error_response.get("code") == "insufficient_quota":
+                print("DEBUG: OpenAI API quota exceeded. Check plan at https://platform.openai.com/account/billing")
+                return {"error": "OpenAI quota exceeded"}
+            print(f"DEBUG: OpenAI API HTTP error: {str(e)}")
+            return {"error": str(e)}
+        except Exception as e:
+            print(f"DEBUG: OpenAI API general error: {str(e)}")
             return {"error": str(e)}
 
     def assign_task(self, task, agent_name):
@@ -60,15 +91,23 @@ class PrometheusAgent:
                 break
         if not asset_type:
             asset_type = "unknown"
-        # Use Grok API for task prioritization
-        grok_response = self.grok_api_call(f"Prioritize task: {task} for {agent_name} in Source of Creation")
-        if not isinstance(grok_response, dict):
+        # Use OpenAI for task prioritization, fall back to Grok if OpenAI fails
+        prompt = f"Prioritize task: {task} for {agent_name} in Source of Creation. Provide a detailed breakdown of subtasks and their priority."
+        openai_response = self.openai_api_call(prompt)
+        if not isinstance(openai_response, dict):
             task_data["status"] = "In Progress"
             task_data["output"] = f"assets/3d/{agent_name}_{asset_type}_lod0.fbx"
-            task_data["grok_priority"] = grok_response
+            task_data["openai_priority"] = openai_response
         else:
-            task_data["status"] = "Error"
-            task_data["error"] = grok_response["error"]
+            print(f"DEBUG: OpenAI failed, falling back to Grok: {openai_response['error']}")
+            grok_response = self.grok_api_call(f"Prioritize task: {task} for {agent_name} in Source of Creation")
+            if not isinstance(grok_response, dict):
+                task_data["status"] = "In Progress"
+                task_data["output"] = f"assets/3d/{agent_name}_{asset_type}_lod0.fbx"
+                task_data["grok_priority"] = grok_response
+            else:
+                task_data["status"] = "Error"
+                task_data["error"] = openai_response.get("error", grok_response.get("error", "Both OpenAI and Grok API calls failed"))
         with open("data/prometheus/tasks.json", "a") as f:
             json.dump(task_data, f)
             f.write("\n")
