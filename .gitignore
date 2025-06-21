@@ -4,4 +4,4 @@ __pycache__/
 .env
 test_env.py
 node_modules/
-.next/
+.next/data/prometheus/tasks.json.bak
