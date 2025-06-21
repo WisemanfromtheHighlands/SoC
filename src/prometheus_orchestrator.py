@@ -83,7 +83,7 @@ class PrometheusAgent:
     def assign_task(self, task, agent_name):
         if agent_name not in self.agents:
             return {"error": f"Agent {agent_name} not found"}
-        task_id = f"{agent_name}_{int(time.time())}"
+        task_id = f"{agent_name}_{int(time.time() * 1000)}_{hash(task):.8x}"  # Use milliseconds and task hash
         task_data = {
             "task_id": task_id,
             "task": task,
