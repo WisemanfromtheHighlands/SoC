@@ -44,7 +44,7 @@ class PrometheusAgent:
             print(f"DEBUG: Grok API error: {str(e)}")
             return {"error": str(e)}
 
-    def openai_api_call(self, prompt, retries=3, backoff_factor=2):
+    def openai_api_call(self, prompt, retries=3, initial_delay=5, backoff_factor=2):
         if not self.api_keys["openai"]:
             print("DEBUG: OpenAI API key missing")
             return {"error": "OpenAI API key missing"}
@@ -68,7 +68,7 @@ class PrometheusAgent:
                     print("DEBUG: OpenAI API quota exceeded. Check plan at https://platform.openai.com/account/billing")
                     return {"error": "OpenAI quota exceeded"}
                 if response.status_code == 429:
-                    wait_time = backoff_factor ** attempt
+                    wait_time = initial_delay * (backoff_factor ** attempt)
                     print(f"DEBUG: OpenAI API rate limit hit (429). Retrying in {wait_time} seconds...")
                     time.sleep(wait_time)
                     continue
