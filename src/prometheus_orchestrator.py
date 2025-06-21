@@ -44,7 +44,7 @@ class PrometheusAgent:
             print(f"DEBUG: Grok API error: {str(e)}")
             return {"error": str(e)}
 
-    def openai_api_call(self, prompt):
+    def openai_api_call(self, prompt, retries=3, backoff_factor=2):
         if not self.api_keys["openai"]:
             print("DEBUG: OpenAI API key missing")
             return {"error": "OpenAI API key missing"}
@@ -57,20 +57,28 @@ class PrometheusAgent:
             "messages": [{"role": "user", "content": prompt}],
             "max_tokens": 150
         }
-        try:
-            response = requests.post("https://api.openai.com/v1/chat/completions", json=payload, headers=headers)
-            response.raise_for_status()
-            return response.json()["choices"][0]["message"]["content"]
-        except requests.exceptions.HTTPError as e:
-            error_response = response.json().get("error", {})
-            if error_response.get("code") == "insufficient_quota":
-                print("DEBUG: OpenAI API quota exceeded. Check plan at https://platform.openai.com/account/billing")
-                return {"error": "OpenAI quota exceeded"}
-            print(f"DEBUG: OpenAI API HTTP error: {str(e)}")
-            return {"error": str(e)}
-        except Exception as e:
-            print(f"DEBUG: OpenAI API general error: {str(e)}")
-            return {"error": str(e)}
+        for attempt in range(retries):
+            try:
+                response = requests.post("https://api.openai.com/v1/chat/completions", json=payload, headers=headers)
+                response.raise_for_status()
+                return response.json()["choices"][0]["message"]["content"]
+            except requests.exceptions.HTTPError as e:
+                error_response = response.json().get("error", {})
+                if error_response.get("code") == "insufficient_quota":
+                    print("DEBUG: OpenAI API quota exceeded. Check plan at https://platform.openai.com/account/billing")
+                    return {"error": "OpenAI quota exceeded"}
+                if response.status_code == 429:
+                    wait_time = backoff_factor ** attempt
+                    print(f"DEBUG: OpenAI API rate limit hit (429). Retrying in {wait_time} seconds...")
+                    time.sleep(wait_time)
+                    continue
+                print(f"DEBUG: OpenAI API HTTP error: {str(e)}")
+                return {"error": str(e)}
+            except Exception as e:
+                print(f"DEBUG: OpenAI API general error: {str(e)}")
+                return {"error": str(e)}
+        print("DEBUG: OpenAI API max retries exceeded")
+        return {"error": "Max retries exceeded for OpenAI API"}
 
     def assign_task(self, task, agent_name):
         if agent_name not in self.agents:
