@@ -15,7 +15,7 @@ class JsonValidatorTool(BaseTool):
 
     def validate_json(self, params):
         json_str = params['values'].get('json_str', '')
-        # Ensure backup directory and file creation with detailed logging
+        # Ensure backup directory and file creation with detailed logging and error handling
         try:
             os.makedirs(self.backup_dir, exist_ok=True)
             timestamp = int(time.time())
@@ -25,6 +25,12 @@ class JsonValidatorTool(BaseTool):
             print(f'DEBUG: Backup successfully created at {backup_path} with content: {json_str[:50]}...')  # Log first 50 chars
         except PermissionError as pe:
             print(f'DEBUG: Permission denied creating backup at {backup_path}: {pe}')
+            # Fallback to a user-writable directory if permission fails
+            fallback_path = os.path.join(os.path.expanduser('~'), 'backup_fallback', f'raw_tasks_{timestamp}.json')
+            os.makedirs(os.path.dirname(fallback_path), exist_ok=True)
+            with open(fallback_path, 'w') as f:
+                f.write(json_str)
+            print(f'DEBUG: Fallback backup created at {fallback_path} with content: {json_str[:50]}...')
         except IOError as ioe:
             print(f'DEBUG: IO error creating backup at {backup_path}: {ioe}')
         except Exception as e:

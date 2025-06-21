@@ -1,0 +1,182 @@
+[
+  {
+    "task_id": "Vitruvius_1750541013972_19a7eb",
+    "task": "Generate low-poly avatar for Prometheus with URP materials",
+    "agent": "Vitruvius",
+    "status": "In Progress",
+    "timestamp": 1750541013.972095,
+    "output": "assets/3d/vitruvius_generate_low-poly_lod0.fbx",
+    "griptape_priority": "1. Research and Planning (High Priority): Gather references.\n2. Modeling (High Priority): Create low-poly model."
+  },
+  {
+    "task_id": "Gaia_1750541013972_4cbc33",
+    "task": "Generate low-poly avatar for Vitruvius with URP materials",
+    "agent": "Gaia",
+    "status": "In Progress",
+    "timestamp": 1750541013.972102,
+    "output": "assets/3d/gaia_generate_low-poly_lod0.fbx",
+    "griptape_priority": "1. Research and Planning (High Priority): Gather references.\n2. Modeling (High Priority): Create low-poly model."
+  },
+  {
+    "task_id": "Imhotep_1750541013972_f55214",
+    "task": "Generate procedural Atlantean temple with glowing runes",
+    "agent": "Imhotep",
+    "status": "In Progress",
+    "timestamp": 1750541013.9721053,
+    "output": "assets/3d/imhotep_generate_procedural_lod0.fbx",
+    "griptape_priority": "1. Research and Planning (High Priority): Gather references.\n2. Modeling (High Priority): Create low-poly model."
+  },
+  {
+    "task_id": "Athena_1750541013972_a9bdfe",
+    "task": "Generate cinematic flythrough for Gaia’s oasis",
+    "agent": "Athena",
+    "status": "In Progress",
+    "timestamp": 1750541013.9721088,
+    "output": "assets/3d/athena_generate_cinematic_lod0.fbx",
+    "griptape_priority": "1. Research and Planning (High Priority): Gather references.\n2. Modeling (High Priority): Create low-poly model."
+  },
+  {
+    "task_id": "Kurosawa_1750541013972_55e422",
+    "task": "Generate low-poly shield with URP materials",
+    "agent": "Kurosawa",
+    "status": "In Progress",
+    "timestamp": 1750541013.9721136,
+    "output": "assets/3d/kurosawa_generate_low-poly_lod0.fbx",
+    "griptape_priority": "1. Research and Planning (High Priority): Gather references.\n2. Modeling (High Priority): Create low-poly model."
+  },
+  {
+    "task_id": "Vitruvius_1750541013972_d93fe1",
+    "task": "Generate cinematic battle sequence with URP",
+    "agent": "Vitruvius",
+    "status": "In Progress",
+    "timestamp": 1750541013.9721165,
+    "output": "assets/3d/vitruvius_generate_cinematic_lod0.fbx",
+    "griptape_priority": "1. Research and Planning (High Priority): Gather references.\n2. Modeling (High Priority): Create low-poly model."
+  },
+  {
+    "task_id": "Gaia_1750541013972_b87754",
+    "task": "Generate low-poly avatar for Prometheus with URP materials",
+    "agent": "Gaia",
+    "status": "In Progress",
+    "timestamp": 1750541013.9721203,
+    "output": "assets/3d/gaia_generate_low-poly_lod0.fbx",
+    "griptape_priority": "1. Research and Planning (High Priority): Gather references.\n2. Modeling (High Priority): Create low-poly model."
+  },
+  {
+    "task_id": "Imhotep_1750541013972_3ebd60",
+    "task": "Generate low-poly avatar for Vitruvius with URP materials",
+    "agent": "Imhotep",
+    "status": "In Progress",
+    "timestamp": 1750541013.972124,
+    "output": "assets/3d/imhotep_generate_low-poly_lod0.fbx",
+    "griptape_priority": "1. Research and Planning (High Priority): Gather references.\n2. Modeling (High Priority): Create low-poly model."
+  },
+  {
+    "task_id": "Athena_1750541013972_017fdb",
+    "task": "Generate procedural Atlantean temple with glowing runes",
+    "agent": "Athena",
+    "status": "In Progress",
+    "timestamp": 1750541013.9721282,
+    "output": "assets/3d/athena_generate_procedural_lod0.fbx",
+    "griptape_priority": "1. Research and Planning (High Priority): Gather references.\n2. Modeling (High Priority): Create low-poly model."
+  },
+  {
+    "task_id": "Kurosawa_1750541013972_dc9dfb",
+    "task": "Generate cinematic flythrough for Gaia’s oasis",
+    "agent": "Kurosawa",
+    "status": "In Progress",
+    "timestamp": 1750541013.9721313,
+    "output": "assets/3d/kurosawa_generate_cinematic_lod0.fbx",
+    "griptape_priority": "1. Research and Planning (High Priority): Gather references.\n2. Modeling (High Priority): Create low-poly model."
+  },
+  {
+    "task_id": "Vitruvius_1750541013972_4b8dd3",
+    "task": "Generate low-poly shield with URP materials",
+    "agent": "Vitruvius",
+    "status": "In Progress",
+    "timestamp": 1750541013.9721344,
+    "output": "assets/3d/vitruvius_generate_low-poly_lod0.fbx",
+    "griptape_priority": "1. Research and Planning (High Priority): Gather references.\n2. Modeling (High Priority): Create low-poly model."
+  },
+  {
+    "task_id": "Gaia_1750541013972_5a26df",
+    "task": "Generate cinematic battle sequence with URP",
+    "agent": "Gaia",
+    "status": "In Progress",
+    "timestamp": 1750541013.9721367,
+    "output": "assets/3d/gaia_generate_cinematic_lod0.fbx",
+    "griptape_priority": "1. Research and Planning (High Priority): Gather references.\n2. Modeling (High Priority): Create low-poly model."
+  },
+  {
+    "task_id": "Imhotep_1750541013972_dfb2e1",
+    "task": "Generate low-poly avatar for Prometheus with URP materials",
+    "agent": "Imhotep",
+    "status": "In Progress",
+    "timestamp": 1750541013.972141,
+    "output": "assets/3d/imhotep_generate_low-poly_lod0.fbx",
+    "griptape_priority": "1. Research and Planning (High Priority): Gather references.\n2. Modeling (High Priority): Create low-poly model."
+  },
+  {
+    "task_id": "Athena_1750541013972_556412",
+    "task": "Generate low-poly avatar for Vitruvius with URP materials",
+    "agent": "Athena",
+    "status": "In Progress",
+    "timestamp": 1750541013.9721434,
+    "output": "assets/3d/athena_generate_low-poly_lod0.fbx",
+    "griptape_priority": "1. Research and Planning (High Priority): Gather references.\n2. Modeling (High Priority): Create low-poly model."
+  },
+  {
+    "task_id": "Kurosawa_1750541013972_515941",
+    "task": "Generate procedural Atlantean temple with glowing runes",
+    "agent": "Kurosawa",
+    "status": "In Progress",
+    "timestamp": 1750541013.9721467,
+    "output": "assets/3d/kurosawa_generate_procedural_lod0.fbx",
+    "griptape_priority": "1. Research and Planning (High Priority): Gather references.\n2. Modeling (High Priority): Create low-poly model."
+  },
+  {
+    "task_id": "Vitruvius_1750541013972_a8001e",
+    "task": "Generate cinematic flythrough for Gaia’s oasis",
+    "agent": "Vitruvius",
+    "status": "In Progress",
+    "timestamp": 1750541013.9721487,
+    "output": "assets/3d/vitruvius_generate_cinematic_lod0.fbx",
+    "griptape_priority": "1. Research and Planning (High Priority): Gather references.\n2. Modeling (High Priority): Create low-poly model."
+  },
+  {
+    "task_id": "Gaia_1750541013972_b935b9",
+    "task": "Generate low-poly shield with URP materials",
+    "agent": "Gaia",
+    "status": "In Progress",
+    "timestamp": 1750541013.972151,
+    "output": "assets/3d/gaia_generate_low-poly_lod0.fbx",
+    "griptape_priority": "1. Research and Planning (High Priority): Gather references.\n2. Modeling (High Priority): Create low-poly model."
+  },
+  {
+    "task_id": "Imhotep_1750541013972_d82ec4",
+    "task": "Generate cinematic battle sequence with URP",
+    "agent": "Imhotep",
+    "status": "In Progress",
+    "timestamp": 1750541013.9721532,
+    "output": "assets/3d/imhotep_generate_cinematic_lod0.fbx",
+    "griptape_priority": "1. Research and Planning (High Priority): Gather references.\n2. Modeling (High Priority): Create low-poly model."
+  },
+  {
+    "task_id": "Athena_1750541013972_1a0e0b",
+    "task": "Generate low-poly avatar for Prometheus with URP materials",
+    "agent": "Athena",
+    "status": "In Progress",
+    "timestamp": 1750541013.972155,
+    "output": "assets/3d/athena_generate_low-poly_lod0.fbx",
+    "griptape_priority": "1. Research and Planning (High Priority): Gather references.\n2. Modeling (High Priority): Create low-poly model."
+  },
+  {
+    "task_id": "Kurosawa_1750541013972_83b372",
+    "task": "Generate low-poly avatar for Vitruvius with URP materials",
+    "agent": "Kurosawa",
+    "status": "In Progress",
+    "timestamp": 1750541013.9721572,
+    "output": "assets/3d/kurosawa_generate_low-poly_lod0.fbx",
+    "griptape_priority": "1. Research and Planning (High Priority): Gather references.\n2. Modeling (High Priority): Create low-poly model."
+  }
+]
