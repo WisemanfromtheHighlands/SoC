@@ -5,9 +5,15 @@ import requests
 from dotenv import load_dotenv
 
 # Load .env file explicitly
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
-print("DEBUG: GROK_SUBSCRIPTION_API_KEY =", os.getenv("GROK_SUBSCRIPTION_API_KEY"))
-print("DEBUG: OPENAI_API_KEY =", os.getenv("OPENAI_API_KEY"))
+env_path = os.path.join(os.path.dirname(__file__), '..', '.env')
+print(f"DEBUG: Loading .env from {env_path}")
+if not os.path.exists(env_path):
+    print(f"ERROR: .env file not found at {env_path}")
+    raise FileNotFoundError(f".env file not found at {env_path}")
+load_dotenv(dotenv_path=env_path)
+grok_key = os.getenv("GROK_SUBSCRIPTION_API_KEY")
+print(f"DEBUG: GROK_SUBSCRIPTION_API_KEY = {grok_key or 'MISSING'}")
+print(f"DEBUG: OPENAI_API_KEY = {os.getenv('OPENAI_API_KEY') or 'MISSING'}")
 
 class PrometheusAgent:
     def __init__(self):
@@ -16,7 +22,7 @@ class PrometheusAgent:
             "leonardo": os.getenv("LEONARDO_API_KEY"),
             "runwayml": os.getenv("RUNWAYML_API_KEY"),
             "openai": os.getenv("OPENAI_API_KEY"),
-            "grok": os.getenv("GROK_SUBSCRIPTION_API_KEY")
+            "grok": grok_key
         }
         self.agents = {
             "Vitruvius": {"role": "Procedural Architect", "tasks": ["generate_temple", "generate_avatar"]},
@@ -83,7 +89,7 @@ class PrometheusAgent:
     def assign_task(self, task, agent_name):
         if agent_name not in self.agents:
             return {"error": f"Agent {agent_name} not found"}
-        task_id = f"{agent_name}_{int(time.time() * 1000)}_{hash(task):.8x}"  # Use milliseconds and task hash
+        task_id = f"{agent_name}_{int(time.time() * 1000)}_{hash(task) & 0xffffffff:08x}"  # Use bitwise AND for 8-char hex
         task_data = {
             "task_id": task_id,
             "task": task,
@@ -120,6 +126,7 @@ class PrometheusAgent:
             json.dump(task_data, f)
             f.write("\n")
         return task_data
+
 
     def run(self, task_description):
         task_map = {
