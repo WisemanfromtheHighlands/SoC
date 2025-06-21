@@ -1,0 +1,6 @@
+- Run API workflow for textures/animations
+- Implement Unity 6.1 URP procedural scripts
+- Add frustum culling and VFX
+- Integrate Hypatia-Blockchain for NFTs
+- Enhance Next.js with WebGL previews
+- Acquire OPENAI_API_KEY for additional functionality (optional)
