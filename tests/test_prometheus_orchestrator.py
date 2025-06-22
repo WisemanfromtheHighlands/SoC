@@ -1,41 +1,60 @@
-import unittest
+import json
 import os
-from unittest.mock import patch
-from src.prometheus_orchestrator import PrometheusAgent
+import time
+from griptape.structures import Agent
+from griptape.tools import WebScraper, TaskMemory
+from dotenv import load_dotenv
 
-class TestPrometheusAgent(unittest.TestCase):
-    def setUp(self):
-        self.agent = PrometheusAgent()
+# Load environment variables
+load_dotenv()
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+GROK_SUBSCRIPTION_API_KEY = os.getenv("GROK_SUBSCRIPTION_API_KEY")
 
-    @patch('src.prometheus_orchestrator.requests.post')
-    def test_openai_api_call(self, mock_post):
-        mock_post.return_value.status_code = 200
-        mock_post.return_value.json.return_value = {
-            "choices": [{"message": {"content": "Mock OpenAI response"}}]
-        }
-        response = self.agent.openai_api_call("Test prompt")
-        self.assertEqual(response, "Mock OpenAI response")
+# Initialize Griptape Agent
+agent = Agent(
+    tools=[WebScraper(), TaskMemory()],
+    off_prompt_driver=None,  # Use default or configure with xAI/Grok if needed
+    stream=False
+)
 
-    @patch('src.prometheus_orchestrator.requests.post')
-    def test_grok_api_call(self, mock_post):
-        mock_post.return_value.status_code = 200
-        mock_post.return_value.json.return_value = {
-            "choices": [{"message": {"content": "Mock Grok response"}}]
-        }
-        response = self.agent.grok_api_call("Test prompt")
-        self.assertEqual(response, "Mock Grok response")
+def generate_task(agent_name, task_description):
+    timestamp = time.time()
+    task_id = f"{agent_name}_{int(timestamp * 1000)}_{hash(task_description) & 0xffffff}"
+    task = {
+        "task_id": task_id,
+        "task": task_description,
+        "agent": agent_name,
+        "status": "In Progress",
+        "timestamp": timestamp,
+        "output": f"assets/3d/{agent_name.lower()}_new_lod0.fbx",
+        "griptape_priority": "1. **Research and Planning** (High Priority): Gather references.\n2. **Modeling** (High Priority): Create low-poly model."
+    }
+    return task
 
-    @patch('src.prometheus_orchestrator.Agent.run')
-    def test_griptape_api_call(self, mock_run):
-        mock_run.return_value.output_task.output.value = "Mock Griptape response"
-        response = self.agent.griptape_api_call("Test prompt")
-        self.assertEqual(response, "Mock Griptape response")
+def load_tasks(file_path):
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as f:
+            return json.load(f)
+    return []
 
-    def test_assign_task_griptape(self):
-        with patch.object(self.agent, 'griptape_api_call', return_value="Griptape priority"):
-            task_data = self.agent.assign_task("Test task", "Vitruvius")
-            self.assertEqual(task_data["griptape_priority"], "Griptape priority")
-            self.assertEqual(task_data["status"], "In Progress")
+def save_tasks(tasks, file_path):
+    with open(file_path, 'w') as f:
+        json.dump(tasks, f, indent=2)
 
-if __name__ == '__main__':
-    unittest.main()
+def main():
+    tasks_file = "data/prometheus/tasks.json"
+    tasks = load_tasks(tasks_file)
+
+    # Generate new tasks
+    new_tasks = [
+        generate_task("Athena", "Generate low-poly shield with URP materials"),
+        generate_task("Kurosawa", "Generate cinematic battle sequence with URP"),
+    ]
+    tasks.extend(new_tasks)
+
+    # Save updated tasks
+    save_tasks(tasks, tasks_file)
+    print(f"Generated {len(new_tasks)} new tasks. Total tasks: {len(tasks)}")
+
+if __name__ == "__main__":
+    main()

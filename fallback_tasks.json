@@ -1,0 +1,20 @@
+[
+  {
+    "task_id": "fallback_1",
+    "task": "Default task 1",
+    "agent": "FallbackAgent",
+    "status": "Pending",
+    "timestamp": 1750550719.824556,
+    "output": "assets/3d/fallback_task1_lod0.fbx",
+    "griptape_priority": "1. Research and Planning (High Priority): Gather references.\n2. Modeling (High Priority): Create low-poly model."
+  },
+  {
+    "task_id": "fallback_2",
+    "task": "Default task 2",
+    "agent": "FallbackAgent",
+    "status": "Pending",
+    "timestamp": 1750550719.824557,
+    "output": "assets/3d/fallback_task2_lod0.fbx",
+    "griptape_priority": "1. Research and Planning (High Priority): Gather references.\n2. Modeling (High Priority): Create low-poly model."
+  }
+]

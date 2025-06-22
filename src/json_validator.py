@@ -11,6 +11,7 @@ class JsonValidatorTool(BaseTool):
         self.description = 'Validates and corrects JSON strings, returning a structured JSON response.'
         self.temperature = 0.1  # Low temperature to reduce creativity
         self.backup_dir = 'data/prometheus/backups'
+        self.fallback_dir = os.path.join(os.path.expanduser('~'), 'SoC_backup_fallback')  # Ensure this matches manual dir
         self.max_retries = 3
 
     def validate_json(self, params):
@@ -22,15 +23,18 @@ class JsonValidatorTool(BaseTool):
             backup_path = os.path.join(self.backup_dir, f'raw_tasks_{timestamp}.json')
             with open(backup_path, 'w') as f:
                 f.write(json_str)
-            print(f'DEBUG: Backup successfully created at {backup_path} with content: {json_str[:50]}...')  # Log first 50 chars
+            print(f'DEBUG: Backup successfully created at {backup_path} with content: {json_str[:50]}...')
         except PermissionError as pe:
             print(f'DEBUG: Permission denied creating backup at {backup_path}: {pe}')
-            # Fallback to a user-writable directory if permission fails
-            fallback_path = os.path.join(os.path.expanduser('~'), 'backup_fallback', f'raw_tasks_{timestamp}.json')
-            os.makedirs(os.path.dirname(fallback_path), exist_ok=True)
-            with open(fallback_path, 'w') as f:
-                f.write(json_str)
-            print(f'DEBUG: Fallback backup created at {fallback_path} with content: {json_str[:50]}...')
+            try:
+                # Use the manually created fallback directory
+                os.makedirs(self.fallback_dir, exist_ok=True)
+                fallback_path = os.path.join(self.fallback_dir, f'raw_tasks_{timestamp}.json')
+                with open(fallback_path, 'w') as f:
+                    f.write(json_str)
+                print(f'DEBUG: Fallback backup created at {fallback_path} with content: {json_str[:50]}...')
+            except Exception as fe:
+                print(f'DEBUG: Fallback failed at {fallback_path}: {fe}')
         except IOError as ioe:
             print(f'DEBUG: IO error creating backup at {backup_path}: {ioe}')
         except Exception as e:
@@ -63,11 +67,11 @@ class JsonValidatorTool(BaseTool):
                     if attempt == self.max_retries - 1:
                         response = {
                             'is_valid': False,
-                            'corrected_json': json_str,  # Preserve original input
+                            'corrected_json': json_str,
                             'error': 'Validation failed after retries: ' + str(e2)
                         }
                         return TextArtifact(json.dumps(response))
-                    time.sleep(1)  # Wait before retry
+                    time.sleep(1)
 
     def get_prompt(self, **kwargs):
         json_structure = {
@@ -95,12 +99,12 @@ class JsonValidatorAgent(Agent):
         super().__init__(tools=tools)
 
     def run(self, params):
-        result = super().run(params)  # Synchronous base run
-        if hasattr(result, 'output'):  # Check if result has an output attribute (e.g., PromptTask)
-            artifact = result.output  # Access the artifact
+        result = super().run(params)
+        if hasattr(result, 'output'):
+            artifact = result.output
         else:
-            artifact = result  # Assume result is already an artifact
-        json_str = params['input']['json_str']  # Get the original JSON string
+            artifact = result
+        json_str = params['input']['json_str']
         return self.tools[0].process_output(artifact.to_text(), json_str)
 
 if __name__ == '__main__':
@@ -108,3 +112,4 @@ if __name__ == '__main__':
     sample_json = '[{"task": "test"},]'
     result = agent.run({'input': {'json_str': sample_json}})
     print(result.output.to_text())
+    

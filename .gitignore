@@ -5,3 +5,4 @@ __pycache__/
 test_env.py
 node_modules/
 .next/data/prometheus/tasks.json.bak
+nextjs-app/app/api/tasks/route.js
